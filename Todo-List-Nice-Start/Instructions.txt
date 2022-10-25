@@ -1,0 +1,1 @@
+//Select DOM  // We Select Elements from the index.html file  
