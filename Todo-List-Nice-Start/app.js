@@ -6,7 +6,8 @@ const filterOption = document.querySelector('.filter-todo');    // "Grabb the fi
 
 //Event Listeners
 todoButton.addEventListener('click',addTodo);
-todoList.addEventListener('click', deleteTodo);
+todoList.addEventListener('click', deleteCheckTodo);
+filterOption.addEventListener('click', filterTodo);
 
 
 
@@ -20,10 +21,13 @@ function addTodo(event){
 const todoDiv = document.createElement('div');                             // Create a todo div  
 todoDiv.classList.add('todo');                                            // Add a class of todo to the (parentElement) div todoDiv 
 // Create li  
-const li = document.createElement('li');
-li.innerText = todoInput.value;                                          // We target the li's innerText and store the input value
-li.classList.add('todo-item');                                           // Add a class of todo-item to the (childrenElement) li 
-todoDiv.appendChild(li);                                                 // We want to append li to parentElement todoDiv
+const newTodo = document.createElement('li');
+newTodo.classList.add('todo-item'); 
+newTodo.innerText = todoInput.value;
+                                           // Add a class of todo-item to the (childrenElement) li 
+newTodo.classList.add('todo-item');                                                // We want to append li to parentElement todoDiv
+todoDiv.appendChild(newTodo);
+todoInput.value = " ";
 
 // Create Completed Button
 const completedButton = document.createElement('button');
@@ -36,22 +40,55 @@ const trashButton = document.createElement('button');
 trashButton.innerHTML = '<i class="fas fa-trash"></i>';
 trashButton.classList.add('trash-btn');
 todoDiv.appendChild(trashButton);
+
 console.log(todoDiv);
 
 // attach final Todo
-todoList.append(todoDiv);
+todoList.appendChild(todoDiv);
 }
 
-function deleteTodo(event){
-const select = event.target;
-console.log(select);
+function deleteCheckTodo(event){
 
-if(select.classList[0] === 'trash-btn') // stoped.......
+  if (event.target.classList.contains('trash-btn')){
+    const todo = event.target.parentElement;
 
-
+    todo.classList.add('fall');
+    todo.addEventListener('transitionend', function(){
+      todo.remove();
+    });
+  }
+    if (event.target.classList.contains('complete-btn')) {
+      const todo = event.target.parentElement;
+      todo.classList.toggle('completed');
+      
+    }
 }
-// e.target.parentElement.remove();
-function filterTodo(e){}
+
+function filterTodo(e) {
+  const todos = todoList.childNodes;
+  todos.forEach(function(todo) {
+    switch (e.target.value) {
+      case "all":
+        todo.style.display = "block";
+        break;
+      case "completed":
+        if (todo.classList.contains("completed")) {
+          todo.style.display = "block";
+        } else {
+          todo.style.display = "none";
+        }
+        break;
+      case "uncompleted":
+        if (!todo.classList.contains("completed")) {
+          todo.style.display = "block";
+        } else {
+          todo.style.display = "none";
+        }
+    }
+  });
+}
+
+
 // use switch here as we have all, completed and uncompleted
 function saveLocalTodos(todo){}
 
